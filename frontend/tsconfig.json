@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "build",
+    "rootDir": "src",
+    "jsx": "react",
+    "skipLibCheck": true,
+    "esModuleInterop": true
+  },
+  "include": ["./src"]
+}

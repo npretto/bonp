@@ -3,5 +3,14 @@
   "version": "0.0.1",
   "author": "Nicolò Pretto <info@npretto.com>",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "electron",
+      "frontend"
+    ],
+    "nohoist": [
+      "electron/**"
+    ]
+  }
 }
