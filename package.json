@@ -1,16 +1,21 @@
 {
-  "name": "book-notes-parser",
+  "name": "boonp",
   "version": "0.0.1",
   "author": "Nicolò Pretto <info@npretto.com>",
   "license": "MIT",
   "private": true,
   "workspaces": {
     "packages": [
-      "electron",
+      "desktop",
       "frontend"
     ],
     "nohoist": [
-      "electron/**"
+      "@bonp/desktop/**"
     ]
+  },
+  "scripts": {
+    "f": "yarn workspace @bonp/frontend",
+    "d": "yarn workspace @bonp/desktop",
+    "cnm": "rm -rf node_modules **/node_modules"
   }
 }

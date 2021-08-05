@@ -1,10 +1,15 @@
 {
-  "name": "frontend",
+  "name": "@bonp/frontend",
   "version": "0.0.1",
   "main": "build/index.js",
   "license": "MIT",
   "dependencies": {
+    "@types/react-router-dom": "^5.1.8",
     "react": "^17.0.2",
+    "react-router-dom": "^5.2.0",
     "typescript": "^4.3.5"
+  },
+  "scripts": {
+    "build": "yarn tsc -p  ./tsconfig.json"
   }
 }
