@@ -17,7 +17,7 @@
     "f": "yarn workspace @bonp/frontend",
     "d": "yarn workspace @bonp/desktop",
     "cnm": "rm -rf node_modules **/node_modules",
-    "dev": "stmux -- [ 'yarn workspace @bonp/desktop tsc -w' .. 'yarn workspace @bonp/desktop start' ]"
+    "dev": "stmux -M  -- [ 'yarn workspace @bonp/desktop tsc -w' .. 'yarn workspace @bonp/desktop start' ]"
   },
   "dependencies": {
     "stmux": "^1.8.1"
