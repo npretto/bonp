@@ -16,6 +16,14 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 
+import { DeviceDetector, EReader } from './DeviceDetector/DeviceDetector';
+import {
+  DeviceAdded,
+  DeviceRemoved,
+  DEVICE_ADDED,
+  DEVICE_REMOVED,
+} from './DeviceDetector/';
+
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -91,6 +99,28 @@ const createWindow = async () => {
       mainWindow.show();
       mainWindow.focus();
     }
+
+    // DETECTOR
+
+    const detector = new DeviceDetector();
+
+    const onAdd = (d: EReader) => {
+      mainWindow?.webContents.send(DEVICE_ADDED, {
+        type: DEVICE_ADDED,
+        device: d,
+        devices: detector.devices,
+      } as DeviceAdded);
+    };
+    const onRemove = (d: EReader) => {
+      mainWindow?.webContents.send(DEVICE_REMOVED, {
+        type: DEVICE_REMOVED,
+        device: d,
+        devices: detector.devices,
+      } as DeviceRemoved);
+    };
+
+    detector.startMonitoring(onAdd, onRemove);
+    // DETECTOR - END
   });
 
   mainWindow.on('closed', () => {
@@ -123,7 +153,16 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.whenReady().then(createWindow).catch(console.log);
+app
+  .whenReady()
+  .then(async () => {
+    {
+      // https://stackoverflow.com/a/60106966/2670415
+      app.allowRendererProcessReuse = false;
+      await createWindow();
+    }
+  })
+  .catch(console.log);
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the

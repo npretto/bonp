@@ -14,5 +14,8 @@
     "postinstall": "yarn electron-rebuild"
   },
   "license": "MIT",
-  "dependencies": {}
+  "dependencies": {
+    "drivelist": "^9.2.4",
+    "usb-detection": "^4.10.0"
+  }
 }
