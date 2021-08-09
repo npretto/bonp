@@ -7,15 +7,17 @@
   "workspaces": {
     "packages": [
       "desktop",
-      "frontend"
+      "frontend",
+      "core"
     ],
     "nohoist": [
-      "@bonp/desktop/**"
+      "@bonp/desktop/**electron**"
     ]
   },
   "scripts": {
     "f": "yarn workspace @bonp/frontend",
     "d": "yarn workspace @bonp/desktop",
+    "c": "yarn workspace @bonp/core",
     "cnm": "rm -rf node_modules **/node_modules",
     "dev": "stmux -M  -- [ 'yarn workspace @bonp/desktop tsc -w' .. 'yarn workspace @bonp/desktop start' ]"
   },

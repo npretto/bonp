@@ -7,6 +7,5 @@
     "skipLibCheck": true,
     "esModuleInterop": true
   },
-  "include": ["./src"],
-  "references": [{ "path": "../core/tsconfig.json" }]
+  "include": ["./src"]
 }

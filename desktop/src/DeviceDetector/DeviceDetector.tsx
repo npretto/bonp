@@ -3,28 +3,19 @@ import fs from 'fs';
 import usbDetect from 'usb-detection';
 import std_path from 'path';
 import { partition } from 'ramda';
-
-export enum EReaderType {
-  KINDLE = 'KINDLE',
-  KOBO = 'KOBO',
-}
-
-export type EReader = {
-  path: string;
-  type: EReaderType;
-  filePath: string;
-};
+import { EReaderDevice, EreaderDeviceType } from '@bonp/core';
 
 class DeviceDetector {
-  public devices: EReader[] = [];
+  public devices: EReaderDevice[] = [];
 
-  onAdd?: (e: EReader) => void = undefined;
-  onRemove?: (e: EReader) => void = undefined;
+  onAdd?: (e: EReaderDevice) => void = undefined;
+
+  onRemove?: (e: EReaderDevice) => void = undefined;
 
   public startMonitoring = (
-    onAdd: (e: EReader) => void,
-    onRemove: (e: EReader) => void
-  ): EReader[] => {
+    onAdd: (e: EReaderDevice) => void,
+    onRemove: (e: EReaderDevice) => void
+  ): EReaderDevice[] => {
     this.onAdd = onAdd;
     this.onRemove = onRemove;
     usbDetect.startMonitoring();
@@ -57,17 +48,20 @@ class DeviceDetector {
   checkForNewDevices = async () => {
     const usbDrives = await this.getusbDrives();
 
-    const isDevice = (v: boolean | EReader): v is EReader => Boolean(v);
+    const isDevice = (v: boolean | EReaderDevice): v is EReaderDevice =>
+      Boolean(v);
 
     const added = usbDrives
       .map((d) => d.mountpoints[0].path)
-      .filter((path) => !this.devices.map(({ path }) => path).includes(path))
+      .filter((p) => !this.devices.map(({ path }) => path).includes(p))
       .map(this.identifyDevice)
       .filter(isDevice);
 
     this.devices = [...this.devices, ...added];
 
-    added.length && this.onAdd && added.forEach(this.onAdd);
+    if (added.length && this.onAdd) {
+      added.forEach(this.onAdd);
+    }
   };
 
   checkForRemovedDevices = async () => {
@@ -75,25 +69,27 @@ class DeviceDetector {
 
     const paths = usbDrives.map((d) => d.mountpoints[0].path);
 
-    const [left, removed] = partition((d: EReader) => paths.includes(d.path))(
-      this.devices
-    );
+    const [left, removed] = partition((d: EReaderDevice) =>
+      paths.includes(d.path)
+    )(this.devices);
 
     this.devices = left;
 
-    removed.length && this.onAdd && removed.forEach(this.onAdd);
+    if (removed.length && this.onAdd) {
+      removed.forEach(this.onAdd);
+    }
   };
 
-  identifyDevice = (path: string): EReader | false => {
+  identifyDevice = (path: string): EReaderDevice | false => {
     if (fs.existsSync(std_path.join(path, 'Documents/My Clippings.txt')))
       return {
-        type: EReaderType.KINDLE,
+        type: EreaderDeviceType.KINDLE,
         path,
         filePath: std_path.join(path, 'Documents/My Clippings.txt'),
       };
     if (fs.existsSync(std_path.join(path, '.kobo')))
       return {
-        type: EReaderType.KOBO,
+        type: EreaderDeviceType.KOBO,
         path,
         filePath: std_path.join(path, '.kobo/KoboReader.sqlite'),
       };

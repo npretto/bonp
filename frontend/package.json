@@ -4,12 +4,23 @@
   "main": "build/index.js",
   "license": "MIT",
   "dependencies": {
+    "@chakra-ui/react": "^1.6.5",
+    "@emotion/react": "^11",
+    "@emotion/styled": "^11",
     "@types/react-router-dom": "^5.1.8",
-    "react": "^17.0.2",
+    "framer-motion": "^4",
+    "rambda": "^6.9.0",
     "react-router-dom": "^5.2.0",
     "typescript": "^4.3.5"
   },
   "scripts": {
     "build": "yarn tsc -p  ./tsconfig.json"
+  },
+  "peerDependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "@types/ramda": "^0.27.44"
   }
 }
