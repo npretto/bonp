@@ -8,7 +8,7 @@ type LeftMenuPRops = {
 };
 
 export const Leftmenu: React.FC<LeftMenuPRops> = ({ useDevices }) => {
-  const devices = useDevices();
+  const devices = [];
   return (
     <Flex
       direction="column"

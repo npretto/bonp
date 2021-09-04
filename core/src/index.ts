@@ -1,2 +1,2 @@
 export * from "./store";
-export * from "./ereader-device";
+export * from "./devices";

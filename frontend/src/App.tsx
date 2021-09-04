@@ -3,7 +3,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
 import { Layout } from "./Layout";
 import { range } from "ramda";
-import { EReaderDevice } from "@bonp/core";
+import { Device } from "@bonp/core";
 
 export const Hello = () => {
   return (
@@ -17,7 +17,7 @@ export const Hello = () => {
 };
 
 type AppProps = {
-  useDevices?: () => EReaderDevice[];
+  useDevices?: () => Device[];
 };
 
 export const App: React.FC<AppProps> = ({ useDevices }) => {
