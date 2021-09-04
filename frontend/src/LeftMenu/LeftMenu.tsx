@@ -1,14 +1,11 @@
 import React from "react";
 import { Box, Flex, Heading } from "@chakra-ui/react";
 import { range } from "ramda";
-import { EReaderDevice } from "@bonp/core";
+import { useSelector } from "react-redux";
+import { selectDevices } from "@bonp/core";
 
-type LeftMenuPRops = {
-  useDevices?: () => EReaderDevice[];
-};
-
-export const Leftmenu: React.FC<LeftMenuPRops> = ({ useDevices }) => {
-  const devices = [];
+export const Leftmenu: React.FC = () => {
+  const devices = useSelector(selectDevices);
   return (
     <Flex
       direction="column"
@@ -22,10 +19,16 @@ export const Leftmenu: React.FC<LeftMenuPRops> = ({ useDevices }) => {
       <Heading size="lg">Books</Heading>
       <Box overflow="scroll" flex={1}>
         <ul>
-          {range(0, 50).map((i) => (
+          {range(0, 100).map((i) => (
             <li key={i}>Book {i}</li>
           ))}
         </ul>
+      </Box>
+      <Box minHeight="150" borderTop="1px solid gray">
+        <Heading size="lg">Devices</Heading>
+        {devices.length
+          ? devices.map((device, i) => <li key={i}>Device ({device.type})</li>)
+          : "No devices connected"}
       </Box>
       <Box></Box>
     </Flex>

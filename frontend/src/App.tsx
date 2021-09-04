@@ -1,9 +1,10 @@
-import React from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { store } from "@bonp/core";
 import { ChakraProvider } from "@chakra-ui/react";
-import { Layout } from "./Layout";
 import { range } from "ramda";
-import { Device } from "@bonp/core";
+import React from "react";
+import { Provider } from "react-redux";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { Layout } from "./Layout";
 
 export const Hello = () => {
   return (
@@ -16,20 +17,20 @@ export const Hello = () => {
   );
 };
 
-type AppProps = {
-  useDevices?: () => Device[];
-};
+type AppProps = {};
 
-export const App: React.FC<AppProps> = ({ useDevices }) => {
+export const App: React.FC<AppProps> = () => {
   return (
-    <ChakraProvider>
-      <BrowserRouter>
-        <Switch>
-          <Layout>
-            <Route path="/" component={Hello} />
-          </Layout>
-        </Switch>
-      </BrowserRouter>
-    </ChakraProvider>
+    <Provider store={store}>
+      <ChakraProvider>
+        <BrowserRouter>
+          <Switch>
+            <Layout>
+              <Route path="/" component={Hello} />
+            </Layout>
+          </Switch>
+        </BrowserRouter>
+      </ChakraProvider>
+    </Provider>
   );
 };

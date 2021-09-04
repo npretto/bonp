@@ -1,8 +1,9 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../store";
 import { Device } from "./deviceType";
 
 const initialState = {
-  list: [],
+  list: [] as Device[],
 };
 
 const devicesSlice = createSlice({
@@ -28,3 +29,5 @@ const { reducer, actions } = devicesSlice;
 
 export const devicesReducer = reducer;
 export const { addDevice, removeDevice } = actions;
+
+export const selectDevices = (s: RootState) => s.devices.list;

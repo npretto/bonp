@@ -9,13 +9,13 @@ class DeviceDetector {
   public devices: Device[] = [];
 
   // TODO: should find a better event api
-  onAdd?: (e: Device, devices: Device[]) => void = undefined;
+  onAdd?: (d: Device, devices: Device[]) => void = undefined;
 
-  onRemove?: (e: Device, devices: Device[]) => void = undefined;
+  onRemove?: (d: Device, devices: Device[]) => void = undefined;
 
   public startMonitoring = (
-    onAdd: (e: Device) => void,
-    onRemove: (e: Device) => void
+    onAdd: (d: Device, devices: Device[]) => void,
+    onRemove: (d: Device, devices: Device[]) => void
   ): Device[] => {
     this.onAdd = onAdd;
     this.onRemove = onRemove;

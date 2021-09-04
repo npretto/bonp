@@ -8,7 +8,7 @@
  * When running `yarn build` or `yarn build:main`, this file is compiled to
  * `./src/main.prod.js` using webpack. This gives us some performance wins.
  */
-import { EReaderDevice } from '@bonp/core';
+import { Device } from '@bonp/core';
 import 'core-js/stable';
 import { app, BrowserWindow, shell } from 'electron';
 import log from 'electron-log';
@@ -104,18 +104,18 @@ const createWindow = async () => {
 
     const detector = new DeviceDetector();
 
-    const onAdd = (d: EReaderDevice) => {
+    const onAdd = (device: Device, devices: Device[]) => {
       mainWindow?.webContents.send(DEVICE_ADDED, {
         type: DEVICE_ADDED,
-        device: d,
-        devices: detector.devices,
+        device,
+        devices,
       } as DeviceAdded);
     };
-    const onRemove = (d: EReaderDevice) => {
+    const onRemove = (device: Device, devices: Device[]) => {
       mainWindow?.webContents.send(DEVICE_REMOVED, {
         type: DEVICE_REMOVED,
-        device: d,
-        devices: detector.devices,
+        device,
+        devices,
       } as DeviceRemoved);
     };
 
