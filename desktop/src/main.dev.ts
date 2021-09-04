@@ -8,21 +8,21 @@
  * When running `yarn build` or `yarn build:main`, this file is compiled to
  * `./src/main.prod.js` using webpack. This gives us some performance wins.
  */
+import { Device } from '@bonp/core';
 import 'core-js/stable';
-import 'regenerator-runtime/runtime';
-import path from 'path';
 import { app, BrowserWindow, shell } from 'electron';
-import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import MenuBuilder from './menu';
-
-import { DeviceDetector, EReader } from './DeviceDetector/DeviceDetector';
+import { autoUpdater } from 'electron-updater';
+import path from 'path';
+import 'regenerator-runtime/runtime';
 import {
   DeviceAdded,
   DeviceRemoved,
   DEVICE_ADDED,
   DEVICE_REMOVED,
-} from './DeviceDetector/';
+} from './DeviceDetector';
+import { DeviceDetector } from './DeviceDetector/DeviceDetector';
+import MenuBuilder from './menu';
 
 export default class AppUpdater {
   constructor() {
@@ -104,18 +104,18 @@ const createWindow = async () => {
 
     const detector = new DeviceDetector();
 
-    const onAdd = (d: EReader) => {
+    const onAdd = (device: Device, devices: Device[]) => {
       mainWindow?.webContents.send(DEVICE_ADDED, {
         type: DEVICE_ADDED,
-        device: d,
-        devices: detector.devices,
+        device,
+        devices,
       } as DeviceAdded);
     };
-    const onRemove = (d: EReader) => {
+    const onRemove = (device: Device, devices: Device[]) => {
       mainWindow?.webContents.send(DEVICE_REMOVED, {
         type: DEVICE_REMOVED,
-        device: d,
-        devices: detector.devices,
+        device,
+        devices,
       } as DeviceRemoved);
     };
 
@@ -155,12 +155,10 @@ app.on('window-all-closed', () => {
 
 app
   .whenReady()
-  .then(async () => {
-    {
-      // https://stackoverflow.com/a/60106966/2670415
-      app.allowRendererProcessReuse = false;
-      await createWindow();
-    }
+  .then(() => {
+    // https://stackoverflow.com/a/60106966/2670415
+    app.allowRendererProcessReuse = false;
+    return createWindow();
   })
   .catch(console.log);
 

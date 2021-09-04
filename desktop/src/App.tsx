@@ -1,22 +1,19 @@
 import { App } from '@bonp/frontend';
-import React from 'react';
-import './App.global.css';
-import { useDevices } from './DeviceDetector';
+import React, { useEffect } from 'react';
+import { addDevice, store } from '@bonp/core';
+import { ipcRenderer } from 'electron';
+import { DEVICE_ADDED, DEVICE_REMOVED } from './DeviceDetector';
 
 export default function DesktopApp() {
-  const devices = useDevices();
+  useEffect(() => {
+    ipcRenderer.on(DEVICE_ADDED, (_, arg) => {
+      store.dispatch(addDevice(arg));
+    });
 
-  return (
-    <div>
-      <p>devices:</p>
-      <ul>
-        {devices.map((device, i) => (
-          <li key={i}>
-            {device.type} at {device.path}
-          </li>
-        ))}
-      </ul>
-      <App />
-    </div>
-  );
+    ipcRenderer.on(DEVICE_REMOVED, (_, arg) => {
+      store.dispatch(addDevice(arg));
+    });
+  }, []);
+
+  return <App />;
 }
