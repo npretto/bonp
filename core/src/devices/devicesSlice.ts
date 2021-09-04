@@ -9,11 +9,17 @@ const devicesSlice = createSlice({
   name: "devices",
   initialState,
   reducers: {
-    addDevice: (state, action: PayloadAction<Device>) => {
-      return state;
+    addDevice: (
+      state,
+      action: PayloadAction<{ device: Device; devices: Device[] }>
+    ) => {
+      state.list = action.payload.devices;
     },
-    removeDevice: (state, action: PayloadAction<Device>) => {
-      return state;
+    removeDevice: (
+      state,
+      action: PayloadAction<{ device: Device; devices: Device[] }>
+    ) => {
+      state.list = action.payload.devices;
     },
   },
 });
@@ -21,3 +27,4 @@ const devicesSlice = createSlice({
 const { reducer, actions } = devicesSlice;
 
 export const devicesReducer = reducer;
+export const { addDevice, removeDevice } = actions;
