@@ -11,7 +11,9 @@
       "core"
     ],
     "nohoist": [
-      "@bonp/desktop/**electron**"
+      "@bonp/desktop/**electron**",
+      "usb-detection",
+      "drivelist"
     ]
   },
   "scripts": {

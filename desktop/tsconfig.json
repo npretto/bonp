@@ -21,16 +21,9 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "allowJs": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": "./src"
   },
-  "exclude": [
-    "test",
-    "release",
-    "src/main.prod.js",
-    "src/renderer.prod.js",
-    "src/dist",
-    ".erb/dll"
-  ],
-  "include": ["src"],
+  "exclude": ["test", "build/release", "build/app/dist", ".erb/dll"],
   "references": [{ "path": "../frontend/tsconfig.json" }]
 }

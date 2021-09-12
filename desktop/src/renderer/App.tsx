@@ -2,7 +2,7 @@ import { App } from '@bonp/frontend';
 import React, { useEffect } from 'react';
 import { addDevice, store } from '@bonp/core';
 import { ipcRenderer } from 'electron';
-import { DEVICE_ADDED, DEVICE_REMOVED } from './DeviceDetector';
+import { DEVICE_ADDED, DEVICE_REMOVED } from '../DeviceDetector';
 
 export default function DesktopApp() {
   useEffect(() => {
