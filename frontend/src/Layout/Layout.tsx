@@ -1,5 +1,5 @@
+import { Box, Flex } from "@chakra-ui/react";
 import React from "react";
-import { Box, Flex, Heading } from "@chakra-ui/react";
 import { Leftmenu } from "../LeftMenu";
 
 export const Layout: React.FC = ({ children }) => {

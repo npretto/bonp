@@ -16,6 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "drivelist": "^9.2.4",
-    "usb-detection": "^4.10.0"
+    "usb-detection": "^4.10.0",
+    "better-sqlite3": "^7.4.3"
   }
 }

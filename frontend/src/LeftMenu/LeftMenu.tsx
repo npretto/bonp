@@ -2,10 +2,16 @@ import React from "react";
 import { Box, Flex, Heading } from "@chakra-ui/react";
 import { range } from "ramda";
 import { useSelector } from "react-redux";
-import { selectDevices } from "@bonp/core";
+import { addClips, selectDevices } from "@bonp/core";
+import { useAppContext } from "../App";
+import { useAppDispatch } from "../store/useStoreHooks";
 
 export const Leftmenu: React.FC = () => {
   const devices = useSelector(selectDevices);
+
+  const { parseDevice } = useAppContext();
+  const dispatch = useAppDispatch();
+
   return (
     <Flex
       direction="column"
@@ -24,12 +30,24 @@ export const Leftmenu: React.FC = () => {
           ))}
         </ul>
       </Box>
-      <Box minHeight="150" borderTop="1px solid gray">
-        <Heading size="lg">Devices</Heading>
-        {devices.length
-          ? devices.map((device, i) => <li key={i}>Device ({device.type})</li>)
-          : "No devices connected"}
-      </Box>
+      {parseDevice && (
+        <Box minHeight="150" borderTop="1px solid gray">
+          <Heading size="lg">Devices</Heading>
+          {devices.length
+            ? devices.map((device, i) => (
+                <li
+                  key={i}
+                  onClick={() => {
+                    const clips = parseDevice(device);
+                    dispatch(addClips(clips));
+                  }}
+                >
+                  Device ({device.type})
+                </li>
+              ))
+            : "No devices connected"}
+        </Box>
+      )}
       <Box></Box>
     </Flex>
   );

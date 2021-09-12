@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { addDevice, store } from '@bonp/core';
 import { ipcRenderer } from 'electron';
 import { DEVICE_ADDED, DEVICE_REMOVED } from './DeviceDetector';
+import { parseDevice } from './parseDevice/parseDevice';
 
 export default function DesktopApp() {
   useEffect(() => {
@@ -15,5 +16,5 @@ export default function DesktopApp() {
     });
   }, []);
 
-  return <App />;
+  return <App parseDevice={parseDevice} />;
 }
