@@ -10,12 +10,12 @@
  */
 import { Device } from '@bonp/core';
 import 'core-js/stable';
-import { app, BrowserWindow, ipcMain, shell } from 'electron';
+import { app, BrowserWindow, shell } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import 'regenerator-runtime/runtime';
-import si from 'systeminformation';
+
 import {
   DeviceAdded,
   DeviceDetector,
@@ -83,7 +83,9 @@ const createWindow = async () => {
     height: 728,
     icon: getAssetPath('icon.png'),
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      // preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true,
+      contextIsolation: false,
     },
   });
 
@@ -101,9 +103,6 @@ const createWindow = async () => {
       mainWindow.show();
       mainWindow.focus();
     }
-
-    const list = await si.blockDevices();
-    console.log('LIST', list);
 
     const detector = new DeviceDetector();
 

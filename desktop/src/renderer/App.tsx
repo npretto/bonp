@@ -1,16 +1,15 @@
 import { App } from '@bonp/frontend';
 import React, { useEffect } from 'react';
 import { addDevice, store } from '@bonp/core';
-import { ipcRenderer } from 'electron';
-import { DEVICE_ADDED, DEVICE_REMOVED } from '../DeviceDetector';
 
 export default function DesktopApp() {
   useEffect(() => {
-    ipcRenderer.on(DEVICE_ADDED, (_, arg) => {
+    const { ipcRenderer } = window.require('electron');
+    ipcRenderer.on('DEVICE_ADDED', (_, arg) => {
       store.dispatch(addDevice(arg));
     });
 
-    ipcRenderer.on(DEVICE_REMOVED, (_, arg) => {
+    ipcRenderer.on('DEVICE_REMOVED', (_, arg) => {
       store.dispatch(addDevice(arg));
     });
   }, []);
