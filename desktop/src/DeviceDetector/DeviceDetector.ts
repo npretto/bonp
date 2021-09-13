@@ -1,9 +1,9 @@
-import * as drivelist from 'drivelist';
 import fs from 'fs';
 import usbDetect from 'usb-detection';
 import std_path from 'path';
 import { partition } from 'ramda';
 import { Device, DeviceType } from '@bonp/core';
+import si from 'systeminformation';
 
 class DeviceDetector {
   public devices: Device[] = [];
@@ -52,7 +52,7 @@ class DeviceDetector {
     const isDevice = (v: boolean | Device): v is Device => Boolean(v);
 
     const added = usbDrives
-      .map((d) => d.mountpoints[0].path)
+      .map((d) => d.mount)
       .filter((p) => !this.devices.map(({ path }) => path).includes(p))
       .map(this.identifyDevice)
       .filter(isDevice);
@@ -67,7 +67,7 @@ class DeviceDetector {
   checkForRemovedDevices = async () => {
     const usbDrives = await this.getusbDrives();
 
-    const paths = usbDrives.map((d) => d.mountpoints[0].path);
+    const paths = usbDrives.map((d) => d.mount);
 
     const [left, removed] = partition((d: Device) => paths.includes(d.path))(
       this.devices
@@ -97,12 +97,12 @@ class DeviceDetector {
     return false;
   };
 
-  private getusbDrives = async (): Promise<drivelist.Drive[]> => {
-    const drives = await drivelist.list();
-    return drives
-      .filter((d) => d.isUSB) // filter for usb
-      .filter((d) => !d.size || d?.size <= 100_000_000_000) // filter for size, i don't think there are ereaders with more than 100gb of memory
-      .filter((d) => d.mountpoints.length); // sometimes they appear without a mountpoint for a moment, I want to skip them and wait
+  private getusbDrives = async () => {
+    const drives = await si.blockDevices();
+
+    return drives.filter((d) => d.protocol === 'USB'); // filter for usb
+    // .filter((d) => !d.size || d?.size <= 100_000_000_000) // filter for size, i don't think there are ereaders with more than 100gb of memory
+    // .filter((d) => true); // sometimes they appear without a mountpoint for a moment, I want to skip them and wait
   };
 }
 

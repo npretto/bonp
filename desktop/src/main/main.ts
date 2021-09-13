@@ -6,7 +6,7 @@
  * through IPC.
  *
  * When running `yarn build` or `yarn build:main`, this file is compiled to
- * `./src/main.prod.js` using webpack. This gives us some performance wins.
+ * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import { Device } from '@bonp/core';
 import 'core-js/stable';
@@ -15,14 +15,16 @@ import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import 'regenerator-runtime/runtime';
+
 import {
   DeviceAdded,
+  DeviceDetector,
   DeviceRemoved,
   DEVICE_ADDED,
   DEVICE_REMOVED,
-} from './DeviceDetector';
-import { DeviceDetector } from './DeviceDetector/DeviceDetector';
+} from '../DeviceDetector';
 import MenuBuilder from './menu';
+import { resolveHtmlPath } from './util';
 
 export default class AppUpdater {
   constructor() {
@@ -39,10 +41,10 @@ if (process.env.NODE_ENV === 'production') {
   sourceMapSupport.install();
 }
 
-if (
-  process.env.NODE_ENV === 'development' ||
-  process.env.DEBUG_PROD === 'true'
-) {
+const isDevelopment =
+  process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
+
+if (isDevelopment) {
   require('electron-debug')();
 }
 
@@ -69,7 +71,7 @@ const createWindow = async () => {
 
   const RESOURCES_PATH = app.isPackaged
     ? path.join(process.resourcesPath, 'assets')
-    : path.join(__dirname, '../assets');
+    : path.join(__dirname, '../../assets');
 
   const getAssetPath = (...paths: string[]): string => {
     return path.join(RESOURCES_PATH, ...paths);
@@ -81,15 +83,17 @@ const createWindow = async () => {
     height: 728,
     icon: getAssetPath('icon.png'),
     webPreferences: {
+      // preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
+      contextIsolation: false,
     },
   });
 
-  mainWindow.loadURL(`file://${__dirname}/index.html`);
+  mainWindow.loadURL(resolveHtmlPath('index.html'));
 
   // @TODO: Use 'ready-to-show' event
-  //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
-  mainWindow.webContents.on('did-finish-load', () => {
+  //        https://github.com/electron/electron/blob/main/docs/api/browser-window.md#using-ready-to-show-event
+  mainWindow.webContents.on('did-finish-load', async () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
@@ -100,11 +104,10 @@ const createWindow = async () => {
       mainWindow.focus();
     }
 
-    // DETECTOR
-
     const detector = new DeviceDetector();
 
     const onAdd = (device: Device, devices: Device[]) => {
+      console.log('ADD', devices);
       mainWindow?.webContents.send(DEVICE_ADDED, {
         type: DEVICE_ADDED,
         device,
@@ -112,6 +115,8 @@ const createWindow = async () => {
       } as DeviceAdded);
     };
     const onRemove = (device: Device, devices: Device[]) => {
+      console.log('REMOVE', devices);
+
       mainWindow?.webContents.send(DEVICE_REMOVED, {
         type: DEVICE_REMOVED,
         device,
@@ -120,7 +125,6 @@ const createWindow = async () => {
     };
 
     detector.startMonitoring(onAdd, onRemove);
-    // DETECTOR - END
   });
 
   mainWindow.on('closed', () => {
@@ -153,14 +157,7 @@ app.on('window-all-closed', () => {
   }
 });
 
-app
-  .whenReady()
-  .then(() => {
-    // https://stackoverflow.com/a/60106966/2670415
-    app.allowRendererProcessReuse = false;
-    return createWindow();
-  })
-  .catch(console.log);
+app.whenReady().then(createWindow).catch(console.log);
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
