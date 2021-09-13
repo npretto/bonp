@@ -2,7 +2,14 @@ import React from "react";
 import { Box, Flex, Heading } from "@chakra-ui/react";
 import { range } from "ramda";
 import { useSelector } from "react-redux";
-import { addClips, selectDevices } from "@bonp/core";
+import {
+  addClips,
+  EntityId,
+  RootState,
+  selectBookById,
+  selectBookIds,
+  selectDevices,
+} from "@bonp/core";
 import { useAppContext } from "../App";
 import { useAppDispatch } from "../store/useStoreHooks";
 
@@ -11,6 +18,8 @@ export const Leftmenu: React.FC = () => {
 
   const { parseDevice } = useAppContext();
   const dispatch = useAppDispatch();
+
+  const bookIds = useSelector(selectBookIds);
 
   return (
     <Flex
@@ -25,8 +34,8 @@ export const Leftmenu: React.FC = () => {
       <Heading size="lg">Books</Heading>
       <Box overflow="scroll" flex={1}>
         <ul>
-          {range(0, 100).map((i) => (
-            <li key={i}>Book {i}</li>
+          {bookIds.map((id) => (
+            <BookListItem bookId={id} />
           ))}
         </ul>
       </Box>
@@ -50,5 +59,14 @@ export const Leftmenu: React.FC = () => {
       )}
       <Box></Box>
     </Flex>
+  );
+};
+
+const BookListItem: React.FC<{ bookId: EntityId }> = ({ bookId }) => {
+  const book = useSelector((s: RootState) => selectBookById(s, bookId));
+  return (
+    <li>
+      <a href={`/book/${book.bookId}`}>{book.title}</a>
+    </li>
   );
 };

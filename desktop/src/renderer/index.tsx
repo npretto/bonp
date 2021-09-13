@@ -1,5 +1,5 @@
 import React from 'react';
 import { render } from 'react-dom';
-import App from './App';
+import { DesktopApp } from './DesktopApp';
 
-render(<App />, document.getElementById('root'));
+render(<DesktopApp />, document.getElementById('root'));
