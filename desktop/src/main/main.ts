@@ -10,12 +10,11 @@
  */
 import { Device } from '@bonp/core';
 import 'core-js/stable';
-import { app, BrowserWindow, shell } from 'electron';
+import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import 'regenerator-runtime/runtime';
-
 import {
   DeviceAdded,
   DeviceDetector,
@@ -23,6 +22,7 @@ import {
   DEVICE_ADDED,
   DEVICE_REMOVED,
 } from '../DeviceDetector';
+import { parseDevice } from '../parseDevice/parseDevice';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
@@ -35,6 +35,15 @@ export default class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
+
+// CUSTOM CODE
+
+ipcMain.on('PARSE_DEVICE', (e, device) => {
+  const ret = parseDevice(device);
+  e.reply('DEVICE_PARSED', ret);
+});
+
+// END CUSTOM CODE
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -83,9 +92,9 @@ const createWindow = async () => {
     height: 728,
     icon: getAssetPath('icon.png'),
     webPreferences: {
-      // preload: path.join(__dirname, 'preload.js'),
-      nodeIntegration: true,
-      contextIsolation: false,
+      preload: path.join(__dirname, 'preload.js'),
+      // nodeIntegration: true,
+      // contextIsolation: false,
     },
   });
 
@@ -104,6 +113,7 @@ const createWindow = async () => {
       mainWindow.focus();
     }
 
+    // CUSTOM CODE
     const detector = new DeviceDetector();
 
     const onAdd = (device: Device, devices: Device[]) => {
@@ -125,6 +135,8 @@ const createWindow = async () => {
     };
 
     detector.startMonitoring(onAdd, onRemove);
+
+    // END CUSTOM CODE
   });
 
   mainWindow.on('closed', () => {

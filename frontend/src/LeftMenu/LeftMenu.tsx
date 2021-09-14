@@ -10,8 +10,10 @@ import {
   selectBookIds,
   selectDevices,
 } from "@bonp/core";
-import { useAppContext } from "../App";
+
 import { useAppDispatch } from "../store/useStoreHooks";
+import { useAppContext } from "../AppPropsAndContext";
+import { Link } from "react-router-dom";
 
 export const Leftmenu: React.FC = () => {
   const devices = useSelector(selectDevices);
@@ -29,14 +31,18 @@ export const Leftmenu: React.FC = () => {
       height="100%"
     >
       <Box borderBottom="2px solid gray">
-        <Heading size="2xl">BONP</Heading>
+        <Link to="/">
+          <Heading size="2xl">BONP!</Heading>
+        </Link>
       </Box>
       <Heading size="lg">Books</Heading>
       <Box overflow="scroll" flex={1}>
         <ul>
-          {bookIds.map((id) => (
-            <BookListItem bookId={id} />
-          ))}
+          {bookIds.length ? (
+            bookIds.map((id) => <BookListItem bookId={id} key={id} />)
+          ) : (
+            <p>no books yet, add from device</p>
+          )}
         </ul>
       </Box>
       {parseDevice && (
@@ -46,9 +52,9 @@ export const Leftmenu: React.FC = () => {
             ? devices.map((device, i) => (
                 <li
                   key={i}
-                  onClick={() => {
-                    const clips = parseDevice(device);
-                    dispatch(addClips(clips));
+                  onClick={async () => {
+                    const clips = await parseDevice(device);
+                    dispatch(addClips(clips as any));
                   }}
                 >
                   Device ({device.type})
@@ -65,8 +71,8 @@ export const Leftmenu: React.FC = () => {
 const BookListItem: React.FC<{ bookId: EntityId }> = ({ bookId }) => {
   const book = useSelector((s: RootState) => selectBookById(s, bookId));
   return (
-    <li>
-      <a href={`/book/${book.bookId}`}>{book.title}</a>
+    <li style={{ borderBottom: "1px solid gray" }}>
+      <Link to={`/book/${book.bookId}`}>{book.title}</Link>
     </li>
   );
 };

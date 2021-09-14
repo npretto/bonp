@@ -21,7 +21,7 @@
     "c": "yarn workspace @bonp/core",
     "clean:node_modules": "rm -rf node_modules **/node_modules",
     "clean": "yarn f clean && yarn c clean",
-    "dev": "stmux -M  -- [ 'yarn workspace @bonp/desktop tsc -w' .. 'yarn workspace @bonp/desktop start' ]"
+    "dev": "yarn d tsc -b && stmux -M  -- [ 'yarn workspace @bonp/desktop tsc -b -w' .. 'yarn workspace @bonp/desktop start' ]"
   },
   "dependencies": {
     "rimraf": "^3.0.2",

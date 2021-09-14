@@ -24,6 +24,7 @@
     "skipLibCheck": true,
     "baseUrl": "./src"
   },
+  "include": ["./src"],
   "exclude": ["test", "build/release", "build/app/dist", ".erb/dll"],
   "references": [{ "path": "../frontend/tsconfig.json" }]
 }

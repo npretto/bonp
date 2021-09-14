@@ -10,12 +10,14 @@
     "url": "https://github.com/electron-react-boilerplate"
   },
   "scripts": {
-    "electron-rebuild": "node -r ../../.erb/scripts/babel-register.js ../../.erb/scripts/electron-rebuild.js",
+    "electron-rebuild_BROKEN": "node -r ../../.erb/scripts/babel-register.js ../../.erb/scripts/electron-rebuild.js",
+    "electron-rebuild": "../../node_modules/.bin/electron-rebuild",
     "link-modules": "node -r ../../.erb/scripts/babel-register.js ../../.erb/scripts/link-modules.js",
     "postinstall": "yarn electron-rebuild && yarn link-modules"
   },
   "license": "MIT",
   "dependencies": {
+    "better-sqlite3": "^7.4.3",
     "systeminformation": "^5.8.8",
     "usb-detection": "^4.10.0"
   }
