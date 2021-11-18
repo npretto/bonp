@@ -1,3 +1,5 @@
+import { DeviceType } from "../devices";
+
 export enum ClipType {
   HIGHLIGHT = "HIGHLIGHT",
   NOTE = "NOTE",
@@ -13,12 +15,12 @@ type CommonParts = {
 };
 
 type KindleSpecific = {
-  type: "kindle";
+  device_type: DeviceType.KINDLE;
   raw: string;
 };
 
 type KoboSpecific = {
-  type: "kobo";
+  device_type: DeviceType.KOBO;
   k_annotation_id: string;
 };
 

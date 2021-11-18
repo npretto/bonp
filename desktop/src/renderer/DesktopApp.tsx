@@ -1,7 +1,7 @@
+import { addDevice, removeDevice, store } from '@bonp/core';
 import { App } from '@bonp/frontend';
-import React, { useEffect } from 'react';
-import { addDevice, Clip, Device, removeDevice, store } from '@bonp/core';
 import { exposed } from 'main/exposed';
+import React, { useEffect } from 'react';
 
 const w = window as typeof window & { exposed: typeof exposed };
 export const DesktopApp = () => {

@@ -3,11 +3,12 @@ import { createStore } from "../store";
 import { addClips } from ".";
 import { ClipToAdd } from "./clip";
 import { selectBookIds, selectClipIds } from "./dataSlice";
+import { DeviceType } from "../devices";
 
 const c1: ClipToAdd = {
   content: "Content of a clip 1",
   book: "First book in the kindle",
-  type: "kindle",
+  device_type: DeviceType.KINDLE,
   device_created_at: "2021-10-10 21:21:11",
   raw: "raw raw first content of a clip 1",
 };
@@ -15,7 +16,7 @@ const c1: ClipToAdd = {
 const c2: ClipToAdd = {
   content: "Content of a clip 2",
   book: "First book in the kindle",
-  type: "kindle",
+  device_type: DeviceType.KINDLE,
   device_created_at: "2021-10-10 21:21:11",
   raw: "raw raw first content of a clip 2",
 };
@@ -23,7 +24,7 @@ const c2: ClipToAdd = {
 const c3: ClipToAdd = {
   content: "Content of the third clip",
   book: "A book on the kobo",
-  type: "kobo",
+  device_type: DeviceType.KOBO,
   device_created_at: "2021-10-10 21:21:11",
   k_annotation_id: "1q2w3e4r",
 };

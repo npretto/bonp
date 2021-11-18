@@ -1,3 +1,4 @@
+import { DeviceType } from "../devices";
 import { Clip } from "./clip";
 
 type KoboResult = {
@@ -11,7 +12,7 @@ type KoboResult = {
 };
 
 type KoboClipRaw = {
-  type: "kobo";
+  device_type: DeviceType.KOBO;
   content: string;
   book: string;
   note?: string;
@@ -29,7 +30,7 @@ export const mapRawKoboToClips = ({
   Title,
   Attribution,
 }: KoboResult): KoboClipRaw => ({
-  type: "kobo",
+  device_type: DeviceType.KOBO,
   content: Text?.trim(),
   book: Title?.trim(),
   note: Annotation?.trim(),

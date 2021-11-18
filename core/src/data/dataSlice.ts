@@ -9,17 +9,19 @@ import { compareAsc, parseISO } from "date-fns";
 import { nanoid } from "nanoid";
 import { Book } from "./book";
 import { RootState } from "../store";
+import { DeviceType } from "../devices";
 
 const alreadyPresent = (clips: Clip[]) => (clip: ClipToAdd) => {
   return Boolean(
     clips.find((c) => {
-      switch (clip.type) {
-        case "kindle":
-          return c.type === "kindle" && c.raw === clip.raw;
+      switch (clip.device_type) {
+        case DeviceType.KINDLE:
+          return c.device_type === DeviceType.KINDLE && c.raw === clip.raw;
 
-        case "kobo":
+        case DeviceType.KOBO:
           return (
-            c.type === "kobo" && clip.k_annotation_id === c.k_annotation_id
+            c.device_type === DeviceType.KOBO &&
+            clip.k_annotation_id === c.k_annotation_id
           );
       }
     })

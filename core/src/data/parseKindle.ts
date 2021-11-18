@@ -2,9 +2,11 @@ import { parse } from "date-fns";
 import { enUS, it } from "date-fns/locale";
 import fs from "fs";
 import { groupBy } from "ramda";
+import { DeviceType } from "../devices";
 import { ClipType } from "./clip";
 
 export class KindleClip {
+  device_type: DeviceType.KINDLE;
   book: string;
   content: string;
   location: string;
@@ -90,6 +92,7 @@ export const parseKindleClip = (clip: string): Partial<KindleClip> => {
     // });
 
     return {
+      device_type: DeviceType.KINDLE,
       book,
       content,
       location: position,
